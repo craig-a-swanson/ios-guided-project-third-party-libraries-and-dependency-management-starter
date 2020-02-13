@@ -26,6 +26,38 @@ class MessageThreadsTableViewController: UITableViewController {
         }
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        if let currentUserDictionary = UserDefaults.standard.value(forKey: "currentUser") as? [String:String] {
+            let currentUser = Sender(dictionary: currentUserDictionary)
+            messageThreadController.currentUser = currentUser
+        } else {
+            // Create an alert that asks the user for a username and saves it to User Defaults
+            let alert = UIAlertController(title: "Set a username", message: nil, preferredStyle: .alert)
+            var usernameTextField: UITextField!
+            
+            alert.addTextField { (textfield) in
+                textfield.placeholder = "Username:"
+                usernameTextField = textfield
+            }
+            
+            let submitAction = UIAlertAction(title: "Submit", style: .default) { (_) in
+                // Take the text field's text and save to User Defaults
+                let displayName = usernameTextField.text ?? "No Name"
+                let id = UUID().uuidString
+                let sender = Sender(senderId: id, displayName: displayName)
+                
+                UserDefaults.standard.set(sender.dictionaryRepresentation, forKey: "currentUser")
+                self.messageThreadController.currentUser = sender
+            }
+            
+            alert.addAction(submitAction)
+            present(alert, animated: true, completion: nil)
+        }
+        
+    }
+    
     // MARK: - Actions
     
     @IBAction func createThread(_ sender: Any) {
@@ -58,14 +90,14 @@ class MessageThreadsTableViewController: UITableViewController {
     
     // MARK: - Navigation
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "ViewMessageThread" {
-            guard let indexPath = tableView.indexPathForSelectedRow,
-                let destinationVC = segue.destination as? MessageThreadDetailTableViewController else { return }
-            
-            destinationVC.messageThreadController = messageThreadController
-            destinationVC.messageThread = messageThreadController.messageThreads[indexPath.row]
-        }
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "ViewMessageThread" {
+//            guard let indexPath = tableView.indexPathForSelectedRow,
+//                let destinationVC = segue.destination as? MessageThreadDetailTableViewController else { return }
+//
+//            destinationVC.messageThreadController = messageThreadController
+//            destinationVC.messageThread = messageThreadController.messageThreads[indexPath.row]
+//        }
+//    }
     
 }
