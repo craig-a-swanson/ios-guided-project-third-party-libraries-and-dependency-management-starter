@@ -90,14 +90,14 @@ class MessageThreadsTableViewController: UITableViewController {
     
     // MARK: - Navigation
 
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "ViewMessageThread" {
-//            guard let indexPath = tableView.indexPathForSelectedRow,
-//                let destinationVC = segue.destination as? MessageThreadDetailTableViewController else { return }
-//
-//            destinationVC.messageThreadController = messageThreadController
-//            destinationVC.messageThread = messageThreadController.messageThreads[indexPath.row]
-//        }
-//    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toMessageDetail" {
+            guard let indexPath = tableView.indexPathForSelectedRow,
+                let destinationVC = segue.destination as? MessageDetailViewController else { return }
+
+            destinationVC.messageThreadController = messageThreadController
+            destinationVC.messageThread = messageThreadController.messageThreads[indexPath.row]
+        }
+    }
     
 }
