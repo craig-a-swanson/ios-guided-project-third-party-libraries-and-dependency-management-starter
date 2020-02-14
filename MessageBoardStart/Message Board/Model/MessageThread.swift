@@ -40,7 +40,7 @@ class MessageThread: Codable, Equatable {
     struct Message: Codable, Equatable, MessageType {
         // MARK: - Message Type
         var sender: SenderType {
-            return Sender(senderId: senderId, displayName: displayName)
+            return Sender(senderId: senderID, displayName: displayName)
         }
         var sentDate: Date { return timestamp }
         var kind: MessageKind { return .text(text) }
@@ -48,21 +48,21 @@ class MessageThread: Codable, Equatable {
         var messageId: String
         let text: String
         let timestamp: Date
-        let senderId: String
+        let senderID: String
         let displayName: String
 
         
         init(text: String, sender: Sender, timestamp: Date = Date(), messageId: String = UUID().uuidString) {
             self.text = text
             self.displayName = sender.displayName
-            self.senderId = sender.senderId
+            self.senderID = sender.senderId
             self.timestamp = timestamp
             self.messageId = messageId
         }
         
         enum CodingKeys: String, CodingKey {
             case displayName
-            case senderId
+            case senderID
             case text
             case timestamp
         }
@@ -72,7 +72,7 @@ class MessageThread: Codable, Equatable {
             
             let text = try container.decode(String.self, forKey: .text)
             let displayName = try container.decode(String.self, forKey: .displayName)
-            let senderID = try container.decode(String.self, forKey: .senderId)
+            let senderID = try container.decode(String.self, forKey: .senderID)
             let timestamp = try container.decode(Date.self, forKey: .timestamp)
             
             let sender = Sender(senderId: senderID, displayName: displayName)
@@ -83,7 +83,7 @@ class MessageThread: Codable, Equatable {
             var container = encoder.container(keyedBy: CodingKeys.self)
             
             try container.encode(displayName, forKey: .displayName)
-            try container.encode(senderId, forKey: .senderId)
+            try container.encode(senderID, forKey: .senderID)
             try container.encode(timestamp, forKey: .timestamp)
             try container.encode(text, forKey: .text)
         }
